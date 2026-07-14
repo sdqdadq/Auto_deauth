@@ -1,0 +1,10 @@
+INTERFACE="wlan0"
+
+MODE=$(iw dev "$INTERFACE" info | awk '/type/ {print $2}')
+
+if [ "$MODE" = "monitor" ]; then
+    echo "$INTERFACE ist bereits im Monitor-Modus."
+else
+    echo "Aktiviere Monitor-Modus..."
+    sudo airmon-ng start "$INTERFACE"
+fi
