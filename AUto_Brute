@@ -1,0 +1,22 @@
+
+BSSID=$(awk -F',' -v essid="$ESSID" '
+NF > 13 {
+    gsub(/^ +| +$/, "", $1)
+    gsub(/^ +| +$/, "", $14)
+
+    if ($14 == essid) {
+        print $1
+        exit
+    }
+}' scan-01.csv)
+
+CHANNEL=$(awk -F',' -v essid="$ESSID" '
+NF > 13 {
+    gsub(/^ +| +$/, "", $4)
+    gsub(/^ +| +$/, "", $14)
+
+    if ($14 == essid) {
+        print $4
+        exit
+    }
+}' scan-01.csv)
