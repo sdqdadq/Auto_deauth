@@ -1,0 +1,10 @@
+echo "Gefundene Netzwerke:"
+awk -F',' '
+NF > 13 && $14 != "" {
+    gsub(/^ +| +$/, "", $1)
+    gsub(/^ +| +$/, "", $4)
+    gsub(/^ +| +$/, "", $6)
+    gsub(/^ +| +$/, "", $14)
+
+    printf "ESSID: %-20s Kanal: %-3s Sicherheit: %-10s BSSID: %s\n", $14, $4, $6, $1
+}' scan-01.csv
